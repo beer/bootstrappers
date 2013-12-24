@@ -102,6 +102,31 @@ module Bootstrappers
 
     end
 
+    def use_postgresql_config_template
+
+      template 'postgresql_database.yml.erb', 'config/database.yml',:force => true
+      template 'postgresql_database.yml.erb', 'config/database.yml.example', :force => true
+
+      db_user_name = ask("What is your local database user name? [postgres]")
+      db_password = ask("What is your local database password? ['']")
+
+      replace_in_file 'config/database.yml', 'username: root', "username: #{db_user_name}" if db_user_name.present?
+      replace_in_file 'config/database.yml', 'password: ""', "password: '#{db_password}'" if db_password.present?
+
+    end
+
+    def use_sqlite_config_template
+
+      template 'sqlite_database.yml.erb', 'config/database.yml',:force => true
+      template 'sqlite_database.yml.erb', 'config/database.yml.example', :force => true
+
+      db_user_name = ask("What is your local database user name? [root]")
+      db_password = ask("What is your local database password? ['']")
+
+      replace_in_file 'config/database.yml', 'username: root', "username: #{db_user_name}" if db_user_name.present?
+      replace_in_file 'config/database.yml', 'password: ""', "password: '#{db_password}'" if db_password.present?
+
+    end
 
   end
 end
